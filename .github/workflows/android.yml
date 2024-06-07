@@ -47,5 +47,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
         with:
-          args: app/build/outputs/apk/release/app/build/outputs/apk/release/FruitF-${{ github.event.release.tag_name }}.apk
+          args: app/build/outputs/apk/release/app/build/outputs/apk/release/fruitf-${{ github.event.release.tag_name }}.apk
 

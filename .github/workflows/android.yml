@@ -29,24 +29,22 @@ jobs:
         with:
           name: signing-keystore  # Name of artifact containing keystore (optional)
 
-      - name: Configure Signing Credentials
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_STORE_FILE }}
+          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
         env:
-          SIGNING_KEY_STORE_FILE: ${{ secrets.SIGNING_KEY_STORE_FILE }}
-          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}  # Optional
-        run: |
-          echo "Downloading signing keystore..."  # Optional output
-
-      - name: Sign Release APK
-        uses: ilharp/sign-android-release@v1.1.0  # Or another signing action
+          # override default build-tools version (33.0.0) -- optional
+          BUILD_TOOLS_VERSION: "34.0.0"
+          
+      - uses: actions/upload-artifact@v2
         with:
-          apk_path: app/build/outputs/apk/release/*.apk  # Adjust path if needed
-          # Use environment variables set in previous step
-
-      - name: Upload Signed APK (Optional)
-        uses: actions/upload-artifact@v3
-        with:
-          name: signed-release-apks
-          path: app/build/outputs/apk/release/*.apk  # Adjust path if needed
-
+          name: Signed app bundle
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}

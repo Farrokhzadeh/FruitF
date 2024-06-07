@@ -45,6 +45,10 @@ jobs:
       - name: ls
         run: ls app/build/outputs/apk/release/
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK to Release
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
         with:
-          path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          releaseId: ${{ needs.create_release.outputs.id }}
+          args: app/build/outputs/apk/release/FruitF.apk

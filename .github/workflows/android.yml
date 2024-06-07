@@ -41,7 +41,10 @@ jobs:
       
       - name: Rename file 
         run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/fruitf-${{ github.event.release.tag_name }}.apk
-        
+      
+      - name: ls
+        run: ls app/build/outputs/apk/release/
+  
       - name: Upload APK to Release
         uses: skx/github-action-publish-binaries@master
         env:

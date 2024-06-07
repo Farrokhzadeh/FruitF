@@ -29,7 +29,7 @@ jobs:
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/apk/release/FruitF.apk
           signingKeyBase64: ${{ secrets.SIGNING_KEY_STORE_FILE }}
           alias: ${{ secrets.SIGNING_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
@@ -43,5 +43,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
         with:
-          eleaseId: ${{ github.event.release.tag_name }}
-          args: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          args: app/build/outputs/apk/release/FruitF.apk

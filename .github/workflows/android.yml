@@ -1,20 +1,20 @@
-name: Android CI
+name: Android Release CI
 
 on:
   release:
-    types: [ published ]  # Only run on published releases
+    types: [ published ]
 
 jobs:
-  build:
+  build_and_sign:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
           cache: gradle
 
@@ -22,4 +22,31 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew assembleRelease
+
+      - name: Download Signing Keystore
+        uses: actions/download-artifact@v3
+        with:
+          name: signing-keystore  # Name of artifact containing keystore (optional)
+
+      - name: Configure Signing Credentials
+        env:
+          SIGNING_KEY_STORE_FILE: ${{ secrets.SIGNING_KEY_STORE_FILE }}
+          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}  # Optional
+        run: |
+          echo "Downloading signing keystore..."  # Optional output
+
+      - name: Sign Release APK
+        uses: ilharp/sign-android-release@v1.1.0  # Or another signing action
+        with:
+          apk_path: app/build/outputs/apk/release/*.apk  # Adjust path if needed
+          # Use environment variables set in previous step
+
+      - name: Upload Signed APK (Optional)
+        uses: actions/upload-artifact@v3
+        with:
+          name: signed-release-apks
+          path: app/build/outputs/apk/release/*.apk  # Adjust path if needed
+

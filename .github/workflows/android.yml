@@ -43,4 +43,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
         with:
-          args: app/build/outputs/apk/release/Fruit-Release.apk
+          name: Fruit-Release.apk
+          args: app/build/outputs/apk/release/*.apk

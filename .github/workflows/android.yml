@@ -24,12 +24,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
-      - name: Download Signing Keystore
-        uses: actions/download-artifact@v3
-        with:
-          name: signing-keystore  # Name of artifact containing keystore (optional)
-
-
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         # ID used to access action output

@@ -40,6 +40,5 @@ jobs:
           
       - uses: actions/upload-artifact@v2
         with:
-          name: Signed app bundle
-          automatic_release_tag: "latest"
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          name: Signed-App.apk
+          path: app/build/outputs/apk/release/*.apk

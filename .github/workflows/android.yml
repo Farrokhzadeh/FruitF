@@ -40,15 +40,18 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
       
       - name: Rename file 
-        run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/FruitF.apk
+        run: cp app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/FruitF.apk
       
       - name: ls
         run: ls app/build/outputs/apk/release/
   
       - name: Upload APK to Release
-        uses: skx/github-action-publish-binaries@master
+        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: app/build/outputs/apk/release/app/build/outputs/apk/release/*.apk
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          asset_name: app-release-unsigned-signed.apk
+          asset_content_type: application/vnd.android.package-archive
 

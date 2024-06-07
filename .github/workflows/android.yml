@@ -2,7 +2,7 @@ name: Android Release CI
 
 on:
   release:
-    types: [ commit ]
+    types: [ published ]
 
 jobs:
   build_and_sign:

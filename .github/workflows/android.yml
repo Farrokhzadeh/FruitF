@@ -5,7 +5,8 @@ on:
     types: [ published ]
 
 jobs:
-  build_and_sign:
+  job:
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -23,13 +24,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew assembleRelease
-
+        
       - uses: r0adkll/sign-android-release@v1
-        name: Sign app APK
+        name: Sign APK
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release/FruitF.apk
+          releaseDirectory: app/build/outputs/apk/release/
           signingKeyBase64: ${{ secrets.SIGNING_KEY_STORE_FILE }}
           alias: ${{ secrets.SIGNING_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
@@ -38,9 +39,8 @@ jobs:
           # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
           
-      - name: Upload APK to Release
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
+      - name: Upload files to Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          args: app/build/outputs/apk/release/FruitF.apk
+          name: FruitF-${{ github.sha }}-signed.apk
+          path: app/build/outputs/apk/release/app-release-unsigned-signed.apk

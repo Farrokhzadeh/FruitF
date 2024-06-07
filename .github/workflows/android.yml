@@ -38,9 +38,16 @@ jobs:
         env:
           # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
-          
-      - name: Upload files to Artifacts
-        uses: actions/upload-artifact@v4
+      
+      - name: Rename file 
+        run: |
+          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/FruitF-${{ github.event.release.tag_name }}.apk
+        
+      - name: Upload APK to Release
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}
         with:
-          name: FruitF-${{ github.sha }}-signed.apk
-          path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          args: |
+            app/build/outputs/apk/release/app/build/outputs/apk/release/FruitF-${{ github.event.release.tag_name }}.apk
+
